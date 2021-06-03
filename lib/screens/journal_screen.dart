@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:journal/components/custom_buttom_sheet.dart';
 import 'package:journal/services/journal_service.dart';
 
 import 'package:provider/provider.dart';
 
-class JournalScreen extends StatelessWidget {
+class JournalScreen extends StatefulWidget {
   const JournalScreen({Key? key, required this.id}) : super(key: key);
 
   final int id;
 
   @override
+  _JournalScreenState createState() => _JournalScreenState();
+}
+
+class _JournalScreenState extends State<JournalScreen> {
+  bool _showBottomSheet = false;
+  @override
   Widget build(BuildContext context) {
     final service = context.watch<JournalService>();
-    final journal = service.getJournal(id);
+    final journal = service.getJournal(widget.id);
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
@@ -24,7 +31,7 @@ class JournalScreen extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () async {
-              await service.removeJournal(id);
+              await service.removeJournal(widget.id);
               Navigator.of(context).pop();
             },
             icon: Icon(
@@ -69,13 +76,32 @@ class JournalScreen extends StatelessWidget {
                 child: CircularProgressIndicator(),
               ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(
-          Icons.edit,
-          color: Colors.white,
-        ),
-        onPressed: () {},
-      ),
+      floatingActionButton: !_showBottomSheet
+          ? FloatingActionButton(
+              child: Icon(
+                Icons.edit,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                setState(() {
+                  _showBottomSheet = true;
+                });
+              },
+            )
+          : null,
+      bottomSheet: _showBottomSheet
+          ? CustomBottomSheet(
+              journal: journal,
+              onClose: () {
+                setState(() {
+                  _showBottomSheet = false;
+                });
+              },
+              onSave: (updatedJournal) {
+                service.updateJournal(updatedJournal);
+              },
+            )
+          : null,
     );
   }
 }

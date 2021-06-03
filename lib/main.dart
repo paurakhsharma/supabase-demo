@@ -1,6 +1,5 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
-import 'package:journal/models/journal.dart';
 import 'package:journal/screens/home_screen.dart';
 import 'package:journal/services/journal_service.dart';
 import 'package:provider/provider.dart';

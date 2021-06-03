@@ -6,10 +6,13 @@ class CustomBottomSheet extends StatefulWidget {
     Key? key,
     required this.onClose,
     required this.onSave,
+    this.journal,
   }) : super(key: key);
 
   final Function onClose;
   final Function(Journal) onSave;
+
+  final Journal? journal;
 
   @override
   _CustomBottomSheetState createState() => _CustomBottomSheetState();
@@ -40,7 +43,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Add New Journal',
+                  widget.journal != null ? 'Edit Journal' : 'Add New Journal',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -121,15 +124,15 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                         ),
                         onPressed: () {
                           if (_formKey.currentState?.validate() ?? false) {
-                            widget.onSave(
-                              Journal(
-                                id: 1, // id doesn't matter here as we remove id while saving the journal
-                                title: _titleController.text,
-                                description: _descriptionController.text,
-                                images: [],
-                                date: DateTime.now(),
-                              ),
+                            final journal = Journal(
+                              id: widget.journal?.id ?? 1,
+                              title: _titleController.text,
+                              description: _descriptionController.text,
+                              images: widget.journal?.images ?? [],
+                              date: widget.journal?.date ?? DateTime.now(),
                             );
+
+                            widget.onSave(journal);
                             widget.onClose();
                           }
                         },
@@ -167,8 +170,10 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
     super.initState();
 
     _titleController = TextEditingController();
+    _titleController.text = widget.journal?.title ?? '';
 
     _descriptionController = TextEditingController();
+    _descriptionController.text = widget.journal?.description ?? '';
   }
 
   @override

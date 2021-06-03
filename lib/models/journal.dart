@@ -38,7 +38,7 @@ class Journal {
       'title': title,
       'description': description,
       'images': images,
-      'date': date.millisecondsSinceEpoch,
+      'date': date.toString(),
     };
   }
 

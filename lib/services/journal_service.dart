@@ -22,8 +22,7 @@ class JournalService extends ChangeNotifier {
       _journals.firstWhereOrNull((element) => element.id == id);
 
   Future<void> _loadJournals() async {
-    final response =
-        await _client.from('journal').select().order('date').execute();
+    final response = await _client.from('journal').select().execute();
 
     _journals = [];
 
@@ -37,6 +36,15 @@ class JournalService extends ChangeNotifier {
     journalMap.remove('id');
     journalMap.remove('date');
     await _client.from('journal').insert(journalMap).execute();
+
+    await _loadJournals();
+  }
+
+  Future<void> updateJournal(Journal journal) async {
+    final journalMap = journal.toMap();
+    final id = journalMap.remove('id');
+
+    await _client.from('journal').update(journalMap).eq('id', id).execute();
 
     await _loadJournals();
   }
