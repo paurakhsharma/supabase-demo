@@ -47,3 +47,5 @@ app.*.map.json
 
 
 firebase-debug.log
+
+.vscode/
