@@ -30,7 +30,7 @@ class JournalTile extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
         ),
         trailing: Text(
-          journal.date.toString().substring(0, 10),
+          journal.date.toString().substring(2, 10),
           style: TextStyle(
             color: Colors.grey,
           ),
