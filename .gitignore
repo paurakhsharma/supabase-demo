@@ -49,5 +49,3 @@ app.*.map.json
 firebase-debug.log
 
 .vscode/
-
-journal_service.dart
