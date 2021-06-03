@@ -1,0 +1,7 @@
+{
+    "name": "firebase",
+    "description": "Firebase",
+    "scripts": {
+        "deploy:web": "cp -r ../build/web ./build && firebase deploy --only hosting"
+    }
+}
