@@ -8,8 +8,8 @@ class JournalService extends ChangeNotifier {
   late final SupabaseClient _client;
   JournalService() {
     _client = SupabaseClient(
-      'supabaseURl',
-      'supabaseToken',
+      'supabaseURl', // replace with supabaseURI
+      'supabaseToken', // replace with supabaseToken
     );
 
     _loadJournals();
