@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:journal/models/journal.dart';
 
+import 'journal_text_field.dart';
+
 class CustomBottomSheet extends StatefulWidget {
   const CustomBottomSheet({
     Key? key,
@@ -50,63 +52,18 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                   ),
                 ),
                 SizedBox(height: 40),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: TextFormField(
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    controller: _titleController,
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return 'Title cannot be empty';
-                      }
-                    },
-                    style: TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      hintStyle: TextStyle(color: Colors.grey),
-                      hintText: 'Journal Title',
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                        borderSide: BorderSide(
-                          color: Colors.black,
-                          width: 2.0,
-                          style: BorderStyle.none,
-                        ),
-                      ),
-                    ),
-                  ),
+                JournalTextField(
+                  controller: _titleController,
+                  title: 'Title',
                 ),
                 SizedBox(height: 20),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: TextFormField(
-                    controller: _descriptionController,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return 'Description cannot be empty';
-                      }
-                    },
-                    maxLines: 10,
-                    style: TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      hintStyle: TextStyle(color: Colors.grey),
-                      hintText: 'Description',
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 15,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                        borderSide: BorderSide(
-                          color: Colors.black,
-                          width: 2.0,
-                          style: BorderStyle.none,
-                        ),
-                      ),
-                    ),
+                JournalTextField(
+                  controller: _descriptionController,
+                  title: 'Description',
+                  maxLines: 5,
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 15,
                   ),
                 ),
                 SizedBox(height: 60),
@@ -118,29 +75,16 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(
-                            vertical: 16,
-                            horizontal: 32,
+                            vertical: 8,
+                            horizontal: 16,
                           ),
                         ),
-                        onPressed: () {
-                          if (_formKey.currentState?.validate() ?? false) {
-                            final journal = Journal(
-                              id: widget.journal?.id ?? 1,
-                              title: _titleController.text,
-                              description: _descriptionController.text,
-                              images: widget.journal?.images ?? [],
-                              date: widget.journal?.date ?? DateTime.now(),
-                            );
-
-                            widget.onSave(journal);
-                            widget.onClose();
-                          }
-                        },
+                        onPressed: _onSave,
                         child: Text(
                           'Save',
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 24,
+                            fontSize: 18,
                           ),
                         ),
                       ),
@@ -150,19 +94,35 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                           'Cancel',
                           style: TextStyle(
                             color: Colors.grey[800],
-                            fontSize: 24,
+                            fontSize: 18,
                           ),
                         ),
                       )
                     ],
                   ),
-                )
+                ),
+                SizedBox(height: 20),
               ],
             ),
           ),
         );
       },
     );
+  }
+
+  void _onSave() {
+    if (_formKey.currentState?.validate() ?? false) {
+      final journal = Journal(
+        id: widget.journal?.id ?? 1,
+        title: _titleController.text,
+        description: _descriptionController.text,
+        images: widget.journal?.images ?? [],
+        date: widget.journal?.date ?? DateTime.now(),
+      );
+
+      widget.onSave(journal);
+      widget.onClose();
+    }
   }
 
   @override
