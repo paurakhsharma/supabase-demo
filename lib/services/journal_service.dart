@@ -67,8 +67,6 @@ class JournalService extends ChangeNotifier {
   }
 
   Future<String?> uploadImage(PlatformFile file) async {
-    final _file = File(file.path!);
-    print(_file);
     final response = await _client.storage.from('journalImages').upload(
           '${DateTime.now().toString()}_${file.name}',
           File(file.path!),

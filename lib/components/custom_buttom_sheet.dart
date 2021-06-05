@@ -1,4 +1,5 @@
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:journal/components/image_renderer.dart';
 import 'package:journal/services/journal_service.dart';
@@ -102,7 +103,8 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                         style: ElevatedButton.styleFrom(
                           onPrimary: Colors.white,
                         ),
-                        onPressed: _uploadingImage ? null : _addImage,
+                        onPressed:
+                            (_uploadingImage || kIsWeb) ? null : _addImage,
                         icon: Icon(Icons.add),
                         label: Text('Add image'),
                       )
