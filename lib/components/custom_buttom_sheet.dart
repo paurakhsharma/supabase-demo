@@ -1,4 +1,9 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:journal/components/image_renderer.dart';
+import 'package:journal/services/journal_service.dart';
+import 'package:provider/provider.dart';
+
 import 'package:journal/models/journal.dart';
 
 import 'journal_text_field.dart';
@@ -23,7 +28,9 @@ class CustomBottomSheet extends StatefulWidget {
 class _CustomBottomSheetState extends State<CustomBottomSheet> {
   late TextEditingController _titleController;
   late TextEditingController _descriptionController;
+  late final List<String> _images;
   final _formKey = GlobalKey<FormState>();
+  bool _uploadingImage = false;
   @override
   Widget build(BuildContext context) {
     return BottomSheet(
@@ -66,6 +73,42 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                     vertical: 15,
                   ),
                 ),
+                SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        color: Colors.grey[700],
+                        padding: const EdgeInsets.all(8),
+                        height: 140,
+                        child: ListView.separated(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: _images.length,
+                          itemBuilder: (context, index) {
+                            return ImageRenderer(
+                              imagePath: _images[index],
+                              height: 100,
+                            );
+                          },
+                          separatorBuilder: (context, index) => SizedBox(
+                            width: 8,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          onPrimary: Colors.white,
+                        ),
+                        onPressed: _uploadingImage ? null : _addImage,
+                        icon: Icon(Icons.add),
+                        label: Text('Add image'),
+                      )
+                    ],
+                  ),
+                ),
                 SizedBox(height: 60),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -89,7 +132,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                         ),
                       ),
                       TextButton(
-                        onPressed: () => widget.onClose(),
+                        onPressed: _onClose,
                         child: Text(
                           'Cancel',
                           style: TextStyle(
@@ -110,19 +153,45 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
     );
   }
 
+  void _onClose() {
+    widget.onClose();
+  }
+
   void _onSave() {
     if (_formKey.currentState?.validate() ?? false) {
       final journal = Journal(
         id: widget.journal?.id ?? 1,
         title: _titleController.text,
         description: _descriptionController.text,
-        images: widget.journal?.images ?? [],
+        images: _images,
         date: widget.journal?.date ?? DateTime.now(),
       );
 
       widget.onSave(journal);
       widget.onClose();
     }
+  }
+
+  Future<void> _addImage() async {
+    setState(() {
+      _uploadingImage = true;
+    });
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      allowCompression: true,
+      // withData: true,
+    );
+
+    if (result == null) return;
+
+    final service = context.read<JournalService>();
+    final imagePath = await service.uploadImage(result.files.single);
+    if (imagePath != null) {
+      _images.add(imagePath);
+    }
+    setState(() {
+      _uploadingImage = false;
+    });
   }
 
   @override
@@ -134,6 +203,8 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
 
     _descriptionController = TextEditingController();
     _descriptionController.text = widget.journal?.description ?? '';
+
+    _images = widget.journal?.images.toList() ?? [];
   }
 
   @override

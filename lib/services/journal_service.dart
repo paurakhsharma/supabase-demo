@@ -1,3 +1,7 @@
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:journal/env_config.dart';
 import 'package:journal/models/journal.dart';
@@ -54,5 +58,27 @@ class JournalService extends ChangeNotifier {
     await _client.from('journal').delete().eq('id', id).execute();
 
     await _loadJournals();
+  }
+
+  Future<dynamic> downloadImage(String imagePath) {
+    final name = imagePath.replaceFirst('journalImages/', '');
+    print(name);
+    return _client.storage.from('journalImages').download(name);
+  }
+
+  Future<String?> uploadImage(PlatformFile file) async {
+    final _file = File(file.path!);
+    print(_file);
+    final response = await _client.storage.from('journalImages').upload(
+          '${DateTime.now().toString()}_${file.name}',
+          File(file.path!),
+        );
+
+    print(response.error?.error);
+    print(response.error?.message);
+
+    if (response.data == null) return null;
+    await _client.storage.from('journalImages').download(response.data!);
+    return response.data;
   }
 }

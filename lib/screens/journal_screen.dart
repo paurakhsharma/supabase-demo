@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:journal/components/custom_buttom_sheet.dart';
+import 'package:journal/components/image_renderer.dart';
 import 'package:journal/services/journal_service.dart';
 
 import 'package:provider/provider.dart';
@@ -41,40 +42,40 @@ class _JournalScreenState extends State<JournalScreen> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: journal != null
-            ? Column(
-                children: [
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(42),
-                      child: Text(
-                        journal.description,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 18,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: journal != null
+              ? Column(
+                  children: [
+                    Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(42),
+                        child: Text(
+                          journal.description,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 18,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 20),
-                  Expanded(
-                    child: Wrap(
+                    SizedBox(height: 20),
+                    Wrap(
                       children: journal.images
                           .map((e) => Container(
                                 height: 200,
                                 width: 200,
-                                child: Image.network(e),
+                                child: ImageRenderer(imagePath: e),
                               ))
                           .toList(),
-                    ),
-                  )
-                ],
-              )
-            : Center(
-                child: CircularProgressIndicator(),
-              ),
+                    )
+                  ],
+                )
+              : Center(
+                  child: CircularProgressIndicator(),
+                ),
+        ),
       ),
       floatingActionButton: !_showBottomSheet
           ? FloatingActionButton(
