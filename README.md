@@ -14,3 +14,17 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+
+## Run the App
+To run the first create a [Supabase](https://supabase.io) project, and create a table `journal`,
+with following columns:
+1. title - text
+2. description - text
+3. images - array<string>
+
+Now run the app with following command
+
+```zsh
+flutter run --dart-define=SupabaseURL=<your supabase url> --dart-define=SupabaseURL=<your supabase token>
+```

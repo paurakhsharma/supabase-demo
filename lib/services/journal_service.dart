@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:journal/env_config.dart';
 import 'package:journal/models/journal.dart';
 import 'package:supabase/supabase.dart';
 
@@ -8,8 +9,8 @@ class JournalService extends ChangeNotifier {
   late final SupabaseClient _client;
   JournalService() {
     _client = SupabaseClient(
-      'supabaseURl', // replace with supabaseURI
-      'supabaseToken', // replace with supabaseToken
+      EnvironmentConfig.SupabaseURL,
+      EnvironmentConfig.SupabaseToken,
     );
 
     _loadJournals();
