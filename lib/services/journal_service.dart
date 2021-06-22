@@ -60,23 +60,18 @@ class JournalService extends ChangeNotifier {
     await _loadJournals();
   }
 
-  Future<dynamic> downloadImage(String imagePath) {
-    final name = imagePath.replaceFirst('journalImages/', '');
-    print(name);
-    return _client.storage.from('journalImages').download(name);
-  }
-
   Future<String?> uploadImage(PlatformFile file) async {
-    final response = await _client.storage.from('journalImages').upload(
-          '${DateTime.now().toString()}_${file.name}',
+    final bucketName = 'journalImages';
+    final fileName = '${DateTime.now().toString()}_${file.name}';
+    final response = await _client.storage.from(bucketName).upload(
+          fileName,
           File(file.path!),
         );
 
-    print(response.error?.error);
-    print(response.error?.message);
-
     if (response.data == null) return null;
-    await _client.storage.from('journalImages').download(response.data!);
-    return response.data;
+    return _client.storage
+        .from('journalImages')
+        .getPublicUrl(response.data!.replaceFirst('$bucketName/', ''))
+        .data;
   }
 }

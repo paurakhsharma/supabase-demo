@@ -1,7 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:journal/components/image_renderer.dart';
 import 'package:journal/services/journal_service.dart';
 import 'package:provider/provider.dart';
 
@@ -88,9 +87,10 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                           scrollDirection: Axis.horizontal,
                           itemCount: _images.length,
                           itemBuilder: (context, index) {
-                            return ImageRenderer(
-                              imagePath: _images[index],
+                            return Image.network(
+                              _images[index],
                               height: 100,
+                              fit: BoxFit.cover,
                             );
                           },
                           separatorBuilder: (context, index) => SizedBox(

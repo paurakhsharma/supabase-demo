@@ -2,8 +2,6 @@ import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:journal/models/journal.dart';
 
-import 'image_renderer.dart';
-
 class JournalTile extends StatelessWidget {
   const JournalTile({
     Key? key,
@@ -27,7 +25,10 @@ class JournalTile extends StatelessWidget {
             ? SizedBox(
                 height: 50,
                 width: 50,
-                child: ImageRenderer(imagePath: journal.images.first),
+                child: Image.network(
+                  journal.images.first,
+                  fit: BoxFit.cover,
+                ),
               )
             : null,
         subtitle: Text(

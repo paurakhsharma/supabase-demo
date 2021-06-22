@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:journal/components/custom_buttom_sheet.dart';
-import 'package:journal/components/image_renderer.dart';
 import 'package:journal/services/journal_service.dart';
 
 import 'package:provider/provider.dart';
@@ -66,7 +65,10 @@ class _JournalScreenState extends State<JournalScreen> {
                           .map((e) => Container(
                                 height: 200,
                                 width: 200,
-                                child: ImageRenderer(imagePath: e),
+                                child: Image.network(
+                                  e,
+                                  fit: BoxFit.cover,
+                                ),
                               ))
                           .toList(),
                     )
