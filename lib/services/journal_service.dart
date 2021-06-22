@@ -27,7 +27,11 @@ class JournalService extends ChangeNotifier {
       _journals.firstWhereOrNull((element) => element.id == id);
 
   Future<void> _loadJournals() async {
-    final response = await _client.from('journal').select().execute();
+    final response = await _client
+        .from('journal')
+        .select()
+        .order('date', ascending: false)
+        .execute();
 
     _journals = [];
 

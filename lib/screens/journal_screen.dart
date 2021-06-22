@@ -61,10 +61,12 @@ class _JournalScreenState extends State<JournalScreen> {
                     ),
                     SizedBox(height: 20),
                     Wrap(
+                      runSpacing: 20,
+                      spacing: 20,
                       children: journal.images
                           .map((e) => Container(
-                                height: 200,
-                                width: 200,
+                                height: journal.images.length == 1 ? 250 : 150,
+                                width: journal.images.length == 1 ? 250 : 150,
                                 child: Image.network(
                                   e,
                                   fit: BoxFit.cover,
